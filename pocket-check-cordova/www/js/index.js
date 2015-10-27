@@ -103,10 +103,8 @@ var app = {
         }
     },
     onDiscoverDevice: function(device) {
-        var listItem = document.createElement('li'),
-            html = '<b>' + device.name + '</b><br/>' +
-            'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
-            device.id;
+        var listItem = document.getElementById('deviceList'),
+            html = "Jacket";
 
         listItem.dataset.deviceId = device.id;
         listItem.innerHTML = html;
@@ -237,16 +235,16 @@ var app = {
         };
 
         var displayNearablesInfo = function(nearables) {
-            console.log("start display");
-            console.log(nearables);
-            // Clear HTML list.
-            $('#id-screen-range-nearables .style-item-list').empty();
+            // console.log("start display");
+            // console.log(nearables);
+            // // Clear HTML list.
+            // $('#id-screen-range-nearables .style-item-list').empty();
 
-            // Generate HTML for nearables.
-            $.each(nearables, function(i, nearable) {
-                var element = $(createNearableHTML(nearable));
-                $('#id-screen-range-nearables .style-item-list').append(element);
-            });
+            // // Generate HTML for nearables.
+            // $.each(nearables, function(i, nearable) {
+            //     var element = $(createNearableHTML(nearable));
+            //     $('#id-screen-range-nearables .style-item-list').append(element);
+            // });
         };
 
         var createNearableHTML = function(nearable) {

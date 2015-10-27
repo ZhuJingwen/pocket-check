@@ -56,6 +56,7 @@ boolean rain = false;
 int buttonState = 1;
 //boolean newBuffer = false;
 boolean startRanging = 1;
+long startTime;
 
 /**************************************************************************/
 
@@ -76,8 +77,8 @@ void setup(void)
   pinMode(buttonPin, INPUT);
   pixels.begin(); // This initializes the NeoPixel library.
 
-  while (!Serial);  // required for Flora & Micro
-  delay(500);
+  //while (!Serial);  // required for Flora & Micro
+  //899delay(500);
 
   Serial.begin(115200);
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
@@ -141,6 +142,7 @@ void loop(void)
 
   //Check for button
   buttonState = digitalRead(buttonPin);
+
   // Check for user input
   //  char inputs[BUFSIZE + 1];
   //
@@ -156,19 +158,18 @@ void loop(void)
 
   if (buttonState == LOW) {
     //button sends message to ble
-    
-    if(startRanging == 1){ 
-    ble.println( F("AT+BLEUARTTX=C") );
-    Serial.println("c");
-    startRanging = 0;
+
+    if (startRanging == 1) {
+      startTime = millis();
+      for (int i = 0; i < 5; i++) {
+        pixels.setPixelColor(i, pixels.Color(50, 50, 0));
+        pixels.show();
+      }
+      ble.println( F("AT+BLEUARTTX=C") );
+      Serial.println("c");
+      startRanging = 0;
     }
   }
-
-//  // check response stastus
-//  if (! ble.waitForOK() ) {
-//
-//    Serial.println(F("Failed to send?"));
-//  }
 
   // Check for incoming characters from Bluefruit
   ble.println("AT+BLEUARTRX");
@@ -180,7 +181,7 @@ void loop(void)
   // Some data was found, its in the buffer
   Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
 
-  startRanging =1;
+  startRanging = 1;
   if (ble.buffer > 0) {
     String inString = String(ble.buffer);
     Serial.println("string is " + inString);
@@ -226,6 +227,13 @@ void loop(void)
         pixels.show();
       }
     }
+  }
+  if ((millis() - startTime) > 3000) {
+    for (int i = 0; i < 5; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+      pixels.show();
+    }
+
   }
   ble.waitForOK();
 
